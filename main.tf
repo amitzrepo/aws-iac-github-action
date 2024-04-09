@@ -190,5 +190,3 @@ resource "local_file" "foo" {
   content  = templatefile("${path.module}/ansible/inventory.ini.tftpl", local.template_vars)
   filename = "${path.module}/ansible/inventory.ini"
 }
-
-# for github action test push
