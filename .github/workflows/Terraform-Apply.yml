@@ -62,5 +62,38 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible
 
-      - name: Run Ansible Playbook
-        run: ansible-playbook ansible/playbook.yml
+  generate_inventory:
+        name: Generate Ansible Inventory
+        runs-on: ubuntu-latest
+        needs: [terraform, ansible]
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+      
+        - name: Generate Ansible inventory file
+          run: |
+                mkdir -p ansible  # Create ansible directory if not exists
+                echo '[ec2]' > ansible/inventory.ini
+                echo '${ec2_hosts}' >> ansible/inventory.ini
+                echo '' >> ansible/inventory.ini
+                echo '[ec2:vars]' >> ansible/inventory.ini
+                echo 'ansible_connection=ssh' >> ansible/inventory.ini
+                echo 'ansible_ssh_private_key_file=${ssh_private_key_file}' >> ansible/inventory.ini
+                echo 'ansible-user=ubuntu' >> ansible/inventory.ini
+                echo 'mount_path="/home/ubuntu/efs"' >> ansible/inventory.ini
+                echo 'efs_endpoint=${efs_hostname}:/' >> ansible/inventory.ini
+      
+        - name: Commit changes
+          run: |
+                git config --global user.email "mr.amitkumarpatel@gmail.com"
+                git config --global user.name "amitzrepo"
+                git add ansible/inventory.ini
+                git commit -m "Update Ansible inventory file"
+                git push
+
+        - name: Run Ansible Playbook
+          run: ansible-playbook ansible/playbook.yml
+      
+      
