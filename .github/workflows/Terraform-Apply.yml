@@ -47,15 +47,6 @@ jobs:
         
       - name: Install ansible
         run: pip3 install ansible
-              
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-
-      - name: Add terraform-inventory to PATH
-        run: echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
-
-      - name: Create Inventory file from its template
-        run: terraform-inventory -i ansible/inventory.ini.tftpl > inventory.ini
 
       - name: Show Inventory
         run: cat ansible/inventory.ini
