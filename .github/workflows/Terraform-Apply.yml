@@ -42,26 +42,23 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve
 
-      - name: Install ansible & python
+      - name: Install python
         uses: actions/setup-python@v5
         
       - name: Install ansible
-        run: |
-              python3 -m venv .ansible
-              source .ansible/bin/activate
-              pip3 install ansible
+        run: pip3 install ansible
               
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
       - name: Add terraform-inventory to PATH
-        run: |
-              echo "::add-path::$(python3 -m site --user-base)/bin"
+        run: echo "$(python3 -m site --user-base)/bin" >> $GITHUB_PATH
 
       - name: Create Inventory file from its template
-        run: |
-              terraform-inventory -i ansible/inventory.ini.tftpl > inventory.ini
+        run: terraform-inventory -i ansible/inventory.ini.tftpl > inventory.ini
 
       - name: Show Inventory
-        run: |
-              cat ansible/inventory.ini
+        run: cat ansible/inventory.ini
 
       - name: Run Ansible Playbook
         run: ansible-playbook ansible/playbook.yml
