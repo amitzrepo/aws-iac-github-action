@@ -51,5 +51,8 @@ jobs:
       - name: Show Inventory
         run: cat ansible/inventory.ini
 
+      - name: Permission change
+        run: chmod 400 tf_key.pem
+
       - name: Run Ansible Playbook
-        run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
+        run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yml -e "ANSIBLE_HOST_KEY_CHECKING=False"
