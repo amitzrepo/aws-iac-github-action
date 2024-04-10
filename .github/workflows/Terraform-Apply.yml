@@ -43,7 +43,7 @@ jobs:
         run: terraform apply -auto-approve
 
       - name: Install python
-        uses: actions/setup-python@v5
+        run: actions/setup-python@v5
         
       - name: Install ansible
         run: pip3 install ansible
