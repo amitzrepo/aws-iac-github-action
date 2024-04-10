@@ -56,10 +56,17 @@ jobs:
         run: |
               sudo apt-get update
               sudo apt-get install -y python3 python3-pip
-              sudo pip3 install ansible        
+              sudo pip3 install ansible
+              pip3 install terraform-inventory
+              
+      - name: Add terraform-inventory to PATH
+        run: |
+              echo "::add-path::$(python3 -m site --user-base)/bin"
+
       - name: Create Inventory file from its template
         run: |
               terraform-inventory -i ansible/inventory.ini.tftpl > inventory.ini
+              
       - name: Show Inventory
         run: |
               cat ansible/inventory.ini
