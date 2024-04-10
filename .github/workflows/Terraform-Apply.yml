@@ -44,8 +44,6 @@ jobs:
 
       - name: Install ansible & python
         uses: actions/setup-python@v5
-        with: 
-          python-version: 3.13
         
       - name: Install ansible
         run: |
