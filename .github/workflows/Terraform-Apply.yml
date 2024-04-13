@@ -58,21 +58,4 @@ jobs:
         run: ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --ssh-common-args='-o StrictHostKeyChecking=no'
 
 
-  destroy_infrastructure:
-    name: Confirm and Destroy Infrastructure
-    runs-on: ubuntu-latest
-    steps:
-      - name: Ask for Confirmation
-        id: confirm
-        uses: actions/checkout@v2
-      - name: Confirm
-        id: confirmation
-        run: |
-              echo "Are you sure you want to destroy the infrastructure? Type 'yes' to confirm."
-              read confirmation
-              echo "::set-output name=confirmed::$confirmation"
-      - name: Run Terraform Destroy
-        if: steps.confirmation.outputs.confirmed == 'yes'
-        run: |
-              echo "Destroying infrastructure..."
-              terraform destroy -auto-approve
+  
